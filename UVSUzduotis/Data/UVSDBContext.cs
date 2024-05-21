@@ -1,0 +1,18 @@
+﻿using Microsoft.EntityFrameworkCore;
+using UVSUzduotis.Model;
+
+namespace UVSUzduotis.Data
+{
+    public class UVSDBContext : DbContext
+    {
+        public DbSet<UVSUzduotisModel> UVSThreadTable { get; set; }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+
+                optionsBuilder.UseSqlServer("Server=localhost;Database=UVSUzduotisDB;Trusted_Connection=True;TrustServerCertificate=True;");
+
+                base.OnConfiguring(optionsBuilder);
+        }
+    }
+}
