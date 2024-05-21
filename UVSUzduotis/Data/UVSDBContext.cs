@@ -6,7 +6,7 @@ namespace UVSUzduotis.Data
     public class UVSDBContext : DbContext
     {
         public DbSet<UVSUzduotisModel> UVSThreadTable { get; set; }
-
+        //Localhost connection.
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
 
