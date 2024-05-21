@@ -5,8 +5,32 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:UVSUzduotis"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="UVSThreads" Height="450" Width="800"  WindowStartupLocation="CenterScreen" Background="#28282B" >
+    <Grid Margin="10">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <ListView x:Name="ThreadListView"  Grid.Row="1" Grid.Column="0" >
+            <ListView.View>
+                <GridView >
+                    <GridViewColumn Header="Thread ID" DisplayMemberBinding="{Binding ThreadID }"/>
+                    <GridViewColumn Header="Generated String" DisplayMemberBinding="{Binding GeneratedString }"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        
+        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Button Content="Button 1" Height="50" Width="100"/>
+        </StackPanel>
+
 
     </Grid>
 </Window>
