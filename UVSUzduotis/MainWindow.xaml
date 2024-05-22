@@ -5,18 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:UVSUzduotis"
         mc:Ignorable="d"
-        Title="UVSThreads" Height="450" Width="800"  WindowStartupLocation="CenterScreen" Background="#28282B" >
+        Title="UVSThreads" Height="450" Width="400"  WindowStartupLocation="CenterScreen" Background="#000080" MinHeight="450" MinWidth="400">
     <Grid Margin="10">
 
+        
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
 
         <ListView x:Name="ThreadListView"  Grid.Row="1" Grid.Column="0" >
             <ListView.View>
@@ -26,11 +22,36 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        
-        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Button Content="Button 1" Height="50" Width="100"/>
+
+
+
+        <StackPanel Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Orientation="Horizontal">
+            <Button Content="Start" Height="30" Width="50" Margin="10" Background="White"/>
+            <Button Content="Stop" Height="30" Width="50" Margin="10" Background="White"/>
         </StackPanel>
 
-
+        <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10">
+            <TextBlock Text="Number of Threads:" Foreground="White" VerticalAlignment="Center" Margin="0,0,10,0"/>
+            <ComboBox x:Name="ThreadSelectionBox" Width="50" VerticalAlignment="Center" Background="White">
+                <ComboBox.ItemsSource>
+                    <x:Array Type="{x:Type sys:Int32}" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+                        <sys:Int32>2</sys:Int32>
+                        <sys:Int32>3</sys:Int32>
+                        <sys:Int32>4</sys:Int32>
+                        <sys:Int32>5</sys:Int32>
+                        <sys:Int32>6</sys:Int32>
+                        <sys:Int32>7</sys:Int32>
+                        <sys:Int32>8</sys:Int32>
+                        <sys:Int32>9</sys:Int32>
+                        <sys:Int32>10</sys:Int32>
+                        <sys:Int32>11</sys:Int32>
+                        <sys:Int32>12</sys:Int32>
+                        <sys:Int32>13</sys:Int32>
+                        <sys:Int32>14</sys:Int32>
+                        <sys:Int32>15</sys:Int32>
+                    </x:Array>
+                </ComboBox.ItemsSource>
+            </ComboBox>
+        </StackPanel>
     </Grid>
 </Window>
