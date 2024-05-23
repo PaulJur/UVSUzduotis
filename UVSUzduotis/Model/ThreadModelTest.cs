@@ -11,7 +11,7 @@ namespace UVSUzduotis.Model
     {
         [Key]
         public int ID { get; set; }
-        public int ThreadID {  get; set; }
+        public int ThreadID { get; set; }
         public string GeneratedString { get; set; }
 
     }

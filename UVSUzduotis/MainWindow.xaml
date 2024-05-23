@@ -14,11 +14,11 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <ListView x:Name="ThreadListView"  Grid.Row="1" Grid.Column="0" >
+        <ListView x:Name="ThreadListView"  Grid.Row="1" Grid.Column="0" ItemsSource="{Binding ThreadModelTest}">
             <ListView.View>
-                <GridView >
-                    <GridViewColumn Header="Thread ID" DisplayMemberBinding="{Binding ThreadID }"/>
-                    <GridViewColumn Header="Generated String" DisplayMemberBinding="{Binding GeneratedString }"/>
+                <GridView>
+                    <GridViewColumn Header="Thread ID" DisplayMemberBinding="{Binding ThreadID}"/>
+                    <GridViewColumn Header="Generated String" DisplayMemberBinding="{Binding GeneratedString}"/>
                 </GridView>
             </ListView.View>
         </ListView>
@@ -32,7 +32,7 @@
 
         <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10">
             <TextBlock Text="Number of Threads:" Foreground="White" VerticalAlignment="Center" Margin="0,0,10,0"/>
-            <ComboBox x:Name="ThreadSelectionBox" Width="50" VerticalAlignment="Center" Background="White">
+            <ComboBox x:Name="ThreadSelectionBox" Width="50" VerticalAlignment="Center" Background="White" SelectionChanged="ThreadSelectionBox_Selected">
                 <ComboBox.ItemsSource>
                     <x:Array Type="{x:Type sys:Int32}" xmlns:sys="clr-namespace:System;assembly=mscorlib">
                         <sys:Int32>2</sys:Int32>
