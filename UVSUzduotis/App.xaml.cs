@@ -11,23 +11,27 @@ namespace UVSUzduotis
     /// </summary>
     public partial class App : Application
     {
+        //NOTE: comments are for myself, because this is my first time working with services.
+
         private ServiceProvider serviceProvider;
 
         public App()
         {
-            ServiceCollection services = new ServiceCollection();
-            ConfigureServices(services);
+            ServiceCollection services = new ServiceCollection();//Register application services
+            ConfigureServices(services);//Configure DI
             serviceProvider = services.BuildServiceProvider();
         }
 
+        //Adds DI to MainWindow for DBContext
         private void ConfigureServices(ServiceCollection services)
         {
-            services.AddDbContext<UVSDBContext>();
+            services.AddDbContext<UVSDBContext>();//Adds UVSDBContext as a service for EF.
 
-            services.AddSingleton<MainWindow>();
+            services.AddSingleton<MainWindow>();//Only one instance of MainWindow.
         }
 
-        private void OnStarup(object sender, EventArgs e)
+        //Startup event
+        private void OnStartup(object sender, EventArgs e)
         {
             var mainWindow = serviceProvider.GetService<MainWindow>();
             mainWindow.Show();

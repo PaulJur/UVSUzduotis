@@ -17,8 +17,6 @@ namespace UVSUzduotis.Model
         public DateTime TimeCreated {  get; set; }
         [Display(Name = "Date")]
         [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
-        public DateTime Date {  get; set; }
-        [Display(Name = "Generated Symbols")]
         public string GeneratedSymbols {  get; set; }
     }
 }

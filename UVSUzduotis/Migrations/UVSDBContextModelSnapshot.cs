@@ -22,26 +22,6 @@ namespace UVSUzduotis.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("UVSUzduotis.Model.ThreadModelTest", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
-
-                    b.Property<string>("GeneratedString")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ThreadID")
-                        .HasColumnType("int");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("ThreadTable");
-                });
-
             modelBuilder.Entity("UVSUzduotis.Model.UVSUzduotisModel", b =>
                 {
                     b.Property<int>("ID")
@@ -49,9 +29,6 @@ namespace UVSUzduotis.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("GeneratedSymbols")
                         .IsRequired()

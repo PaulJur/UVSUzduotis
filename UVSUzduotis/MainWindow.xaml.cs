@@ -13,6 +13,7 @@ using System.Windows.Shapes;
 using UVSUzduotis.Controller;
 using UVSUzduotis.Data;
 using UVSUzduotis.Model;
+using System.Windows.Threading;
 
 namespace UVSUzduotis
 {
@@ -21,28 +22,29 @@ namespace UVSUzduotis
     /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly UVSDBContext _context;
-        ThreadModelTest _test;
 
+        //LIST VIEW ONLY SHOWS LAST 20 GENERATED ROWS FROM DB AND EVERY THREAD GENERATES A NEW SYMBOL EVERYTIME UNTIL STOP.
+        private readonly UVSDBContext _context;
+        private ThreadController _threadController;
         public static ListView _listView;
+
+        private int selectedThreads;
 
         public MainWindow(UVSDBContext context)
         {
             _context = context;
-            ThreadController threadController = new ThreadController(_context);
+            _threadController = new ThreadController(_context, Dispatcher);
 
             InitializeComponent();
-
-            threadController.ThreadSymbolGeneration(0) ;
-
-            LoadListView();
 
         }
 
         private void LoadListView()
         {
+            //Takes 20 rows from DB in descending order.Study this
+            var latestThreads = _context.UVSThreadTable.OrderByDescending(t => t.ThreadID ).Take(20).ToList();
             ThreadListView.ItemsSource = null;
-            ThreadListView.ItemsSource = _context.ThreadTable.ToList();
+            ThreadListView.ItemsSource = latestThreads;
             _listView = ThreadListView;
         }
 
@@ -53,14 +55,25 @@ namespace UVSUzduotis
 
         private void ThreadSelectionBox_Selected(object sender, RoutedEventArgs e)
         {
-            if (ThreadSelectionBox.SelectedItem != null)
-            {
-                int selectedThreads = (int)ThreadSelectionBox.SelectedItem;
-                ThreadController threadController = new ThreadController(_context);
-                threadController.ThreadSymbolGeneration(selectedThreads);
+                //Assigns the thread amount to the variable.
+                if (ThreadSelectionBox.SelectedItem != null)
+                {
+                    selectedThreads = (int)ThreadSelectionBox.SelectedItem;
 
-            }
+                }
 
+        }
+
+        private void ThreadButton_Start(object sender, RoutedEventArgs e)
+        {
+            //The amount of threads used is based on the user request.
+            _threadController.ThreadSymbolGeneration(selectedThreads,true);
+
+        }
+        private void ThreadButton_Stop(object sender, RoutedEventArgs e)
+        {
+            _threadController.ThreadSymbolGeneration(selectedThreads,false);
+            LoadListView();
         }
     }
 }

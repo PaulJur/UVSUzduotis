@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using UVSUzduotis.Data;
 using System.Diagnostics;
 using UVSUzduotis.Model;
+using System.Windows.Threading;
 
 namespace UVSUzduotis.Controller
 {
@@ -14,63 +15,75 @@ namespace UVSUzduotis.Controller
         private readonly UVSDBContext _context;
         private static SymbolGeneratorController _symbolGeneratorController = new SymbolGeneratorController();
         private static readonly object _locker = new object();
+        private readonly Dispatcher _dispatcher;
 
 
-        public ThreadController(UVSDBContext context)
+        public ThreadController(UVSDBContext context, Dispatcher dispatcher)
         {
             _context = context;
+            _dispatcher = dispatcher;
         }
-        public void ThreadSymbolGeneration(int threadAmountChoice)//Thread not safe with context, need to call DBcontext inside. ThreadID=Thread[i]. Also need a lock(lockobject), so only one thread per 0.5-2 seconds can access the DB add/DB savechanges.
+        public void ThreadSymbolGeneration(int threadAmountChoice, bool isRunning)
         {
 
             Thread[] threadArary = new Thread[threadAmountChoice];
 
-            lock (_locker)
-            {
+           
                 using(var context = new UVSDBContext())
                 {
                     for (int i = 0; i < threadAmountChoice; i++)
-                    {
-                        int threadID = i + 1;
+                {
+
+                    int threadID = i + 1;//assign thread ID
                         threadArary[i] = new Thread(() =>
                         {
-                            try
+                            while(isRunning)//Run while 
                             {
-                                string symbols = _symbolGeneratorController.GenerateSymbols(5, 10);
-                                lock (_locker)
+                                try
                                 {
-                                    Console.WriteLine($"Thread {threadID} generated symbol: {symbols}");
+                                    string symbols = _symbolGeneratorController.GenerateSymbols(5, 10);
+                                    lock (_locker)// Lock for thread safe database operations.
+                                    {
+                                        _dispatcher.Invoke(() =>
+                                        {
+                                            Console.WriteLine($"Thread {threadID} generated symbol: {symbols}");
+
+                                            UVSUzduotisModel threadModelTest = new UVSUzduotisModel()
+                                            {
+                                                ThreadID = threadID,
+                                                TimeCreated = DateTime.Now,
+                                                GeneratedSymbols = symbols,
+
+                                            };
+
+                                            _context.UVSThreadTable.Add(threadModelTest);
+                                            _context.SaveChanges();
+                                        });
+                                        Random sleepTime = new Random();
+                                        int sleepTimeNumber = sleepTime.Next(500, 2000); //0.5 to 2 seconds thread wait.
+                                        Thread.Sleep(sleepTimeNumber);
+                                    } 
                                 }
-
-                                Random sleepTime = new Random();
-                                int sleepTimeNumber = sleepTime.Next(500, 2000);
-                                Thread.Sleep(sleepTimeNumber);
+                                catch (Exception ex)
+                                {
+                                    Console.WriteLine($"Error in thread {threadID}: {ex.Message}");
+                                }
                             }
-                            catch (Exception ex)
-                            {
-                                Console.WriteLine($"Error in thread {threadID}: {ex.Message}");
-                            }
-
-
                         });
+                        threadArary[i].IsBackground = true;
                         threadArary[i].Start();
 
                     }
                 }
-            }
 
             foreach(Thread thread in threadArary)
             {
                 thread.Join();
             }
             
+
         }
+
 
     }
 }
-/* using (var context = new UVSDBContext())
-            {
-                Thread[] threadArray = new Thread[threadAmountChoice];
-
-
-            }*/
