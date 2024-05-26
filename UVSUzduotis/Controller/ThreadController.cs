@@ -12,14 +12,14 @@ namespace UVSUzduotis.Controller
         private static SymbolGeneratorController _symbolGeneratorController = new SymbolGeneratorController();
         private static readonly object _locker = new object();
 
-        private Thread[] _threads;
-        private ManualResetEvent _stopEvent; //used to signal the Threads. For Multi-Threading apps.
-        private bool _isRunning;
+        private Thread[] threads;
+        private ManualResetEvent stopEvent; //used to signal the Threads. For Multi-Threading apps.
+        private bool isRunning;
 
         public ThreadController(UVSDBContext context)
         {
             _context = context;
-            _stopEvent = new ManualResetEvent(false); //Makes the Event non-signaled on call.
+            stopEvent = new ManualResetEvent(false); //Makes the Event non-signaled on call.
         }
 
         //Main method to generate symbols.
@@ -37,29 +37,29 @@ namespace UVSUzduotis.Controller
         //Method to start the Threads.
         private void StartThreads(int threadAmountChoice)
         {
-            _threads = new Thread[threadAmountChoice];
-            _stopEvent.Reset(); //Resets the event to non-signaled.
-            _isRunning = true;
+            threads = new Thread[threadAmountChoice];
+            stopEvent.Reset(); //Resets the event to non-signaled.
+            isRunning = true;
             //Based on the Thread amount picked by user, will generate symbols using X amount of threads constantly.
             for (int i = 0; i < threadAmountChoice; i++)
             {
                 int threadID = i + 1;
-                _threads[i] = new Thread(() => GenerateSymbols(threadID));
-                _threads[i].IsBackground = true; //allows prompt exit of application if needed and long-running task prevent of closing the app.
-                _threads[i].Start();
+                threads[i] = new Thread(() => GenerateSymbols(threadID));
+                threads[i].IsBackground = true; //allows prompt exit of application if needed and long-running task prevent of closing the app.
+                threads[i].Start();
             }
         }
 
         private void StopThreads()
         {
-            _isRunning = false;
-            _stopEvent.Set();// Sets to Signaled state, allowing all threads to go and exit;
+            isRunning = false;
+            stopEvent.Set();// Sets to Signaled state, allowing all threads to go and exit;
 
 
             try {
-                if(_isRunning)
+                if(isRunning)
                 {
-                    foreach (var thread in _threads)
+                    foreach (var thread in threads)
                     {
                         if (thread != null && thread.IsAlive)//If threads are still alive and not null, join().
                         {
@@ -77,7 +77,7 @@ namespace UVSUzduotis.Controller
 
         private void GenerateSymbols(int threadID)
         {
-            while (_isRunning && !_stopEvent.WaitOne(0))//Check if the Threads are running and the even is signaled.
+            while (isRunning && !stopEvent.WaitOne(0))//Check if the Threads are running and the even is signaled.
             {
                 try
                 {

@@ -12,8 +12,8 @@ using UVSUzduotis.Data;
 namespace UVSUzduotis.Migrations
 {
     [DbContext(typeof(UVSDBContext))]
-    [Migration("20240524081148_UVSThreadTable")]
-    partial class UVSThreadTable
+    [Migration("20240526113344_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
