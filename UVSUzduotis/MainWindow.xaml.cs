@@ -23,7 +23,6 @@ namespace UVSUzduotis
     public partial class MainWindow : Window
     {
 
-        //LIST VIEW ONLY SHOWS LAST 20 GENERATED ROWS FROM DB AND EVERY THREAD GENERATES A NEW SYMBOL EVERYTIME UNTIL STOP.
         private readonly UVSDBContext _context;
         private ThreadController _threadController;
         public static ListView _listView;
@@ -33,16 +32,18 @@ namespace UVSUzduotis
         public MainWindow(UVSDBContext context)
         {
             _context = context;
-            _threadController = new ThreadController(_context, Dispatcher);
+            _threadController = new ThreadController(_context);
 
             InitializeComponent();
+
+            LoadListView();
 
         }
 
         private void LoadListView()
         {
-            //Takes 20 rows from DB in descending order.Study this
-            var latestThreads = _context.UVSThreadTable.OrderByDescending(t => t.ThreadID ).Take(20).ToList();
+            //Takes 20 rows from DB in descending ordered by ID.
+            var latestThreads = _context.UVSThreadTable.OrderByDescending(t => t.ID ).Take(20).ToList();
             ThreadListView.ItemsSource = null;
             ThreadListView.ItemsSource = latestThreads;
             _listView = ThreadListView;

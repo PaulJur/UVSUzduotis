@@ -18,7 +18,7 @@
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Thread ID" DisplayMemberBinding="{Binding ThreadID}"/>
-                    <GridViewColumn Header="Generated String" DisplayMemberBinding="{Binding GeneratedString}"/>
+                    <GridViewColumn Header="Generated String" DisplayMemberBinding="{Binding GeneratedSymbols}"/>
                 </GridView>
             </ListView.View>
         </ListView>

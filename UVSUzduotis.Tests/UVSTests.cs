@@ -1,12 +1,16 @@
+
 namespace UVSUzduotis.Tests
 {
     public class UVSTests
     {
+
+
+
         [Fact]
-        public void Test1()
+        public void UVSUzduotis_StartThreads_IsThreadAlive()
         {
             //Arrange
-
+            
             //Act
 
             //Assert
