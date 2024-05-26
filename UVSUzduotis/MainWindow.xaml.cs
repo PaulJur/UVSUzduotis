@@ -14,6 +14,7 @@ using UVSUzduotis.Controller;
 using UVSUzduotis.Data;
 using UVSUzduotis.Model;
 using System.Windows.Threading;
+using Microsoft.EntityFrameworkCore;
 
 namespace UVSUzduotis
 {
@@ -35,6 +36,8 @@ namespace UVSUzduotis
             _threadController = new ThreadController(_context);
 
             InitializeComponent();
+
+            _context.Database.EnsureCreated();//This makes sure that the databae is created.
 
             LoadListView();
 

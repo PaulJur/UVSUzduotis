@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using System.Configuration;
 using System.Data;
 using System.Windows;
@@ -17,9 +18,12 @@ namespace UVSUzduotis
 
         public App()
         {
+            
+
             ServiceCollection services = new ServiceCollection();//Register application services
             ConfigureServices(services);//Configure DI
             serviceProvider = services.BuildServiceProvider();
+
         }
 
         //Adds DI to MainWindow for DBContext
