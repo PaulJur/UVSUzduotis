@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using UVSUzduotis.Data;
@@ -13,24 +14,28 @@ namespace UVSUzduotis.Controller
         private static readonly object _locker = new object();
 
         private Thread[] threads;
-        private ManualResetEvent stopEvent; //used to signal the Threads. For Multi-Threading apps.
+        private CancellationTokenSource cancellationToken;
         private bool isRunning;
 
+        public ObservableCollection<UVSUzduotisModel> UVSModels { get; set; }
         public ThreadController(UVSDBContext context)
         {
             _context = context;
-            stopEvent = new ManualResetEvent(false); //Makes the Event non-signaled on call.
+            cancellationToken = new CancellationTokenSource();
+            UVSModels = new ObservableCollection<UVSUzduotisModel>();
         }
 
         //Main method to generate symbols.
-        public void ThreadSymbolGeneration(int threadAmountChoice, bool isRunning)
+        public void ThreadSymbolGeneration(int threadAmountChoice, bool start)
         {
-            if (isRunning)
+            if (start && !isRunning)
             {
+                cancellationToken = new CancellationTokenSource();
                 StartThreads(threadAmountChoice);
             }
-            else
+            else if(!start && isRunning)
             {
+                cancellationToken.Cancel();
                 StopThreads();
             }
         }      
@@ -38,7 +43,6 @@ namespace UVSUzduotis.Controller
         private void StartThreads(int threadAmountChoice)
         {
             threads = new Thread[threadAmountChoice];
-            stopEvent.Reset(); //Resets the event to non-signaled.
             isRunning = true;
             //Based on the Thread amount picked by user, will generate symbols using X amount of threads constantly.
             for (int i = 0; i < threadAmountChoice; i++)
@@ -53,8 +57,6 @@ namespace UVSUzduotis.Controller
         private void StopThreads()
         {
             isRunning = false;
-            stopEvent.Set();// Sets to Signaled state, allowing all threads to go and exit;
-
 
             try {
                 if(isRunning)
@@ -77,7 +79,7 @@ namespace UVSUzduotis.Controller
 
         private void GenerateSymbols(int threadID)
         {
-            while (isRunning && !stopEvent.WaitOne(0))//Check if the Threads are running and the even is signaled.
+            while (!cancellationToken.IsCancellationRequested)//If the cancelation is not requested, keeps running.
             {
                 try
                 {
@@ -92,6 +94,15 @@ namespace UVSUzduotis.Controller
                             TimeCreated = DateTime.Now,
                             GeneratedSymbols = symbols,
                         };
+
+                        App.Current.Dispatcher.Invoke((Action)delegate
+                        {
+                            if (UVSModels.Count >= 20)
+                            {
+                                UVSModels.RemoveAt(0); // Remove the oldest item if the collection has reached 20 items.
+                            }
+                            UVSModels.Add(threadModelTest);
+                        });
 
                         _context.UVSThreadTable.Add(threadModelTest);
                         _context.SaveChanges();

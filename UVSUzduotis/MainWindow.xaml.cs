@@ -15,6 +15,8 @@ using UVSUzduotis.Data;
 using UVSUzduotis.Model;
 using System.Windows.Threading;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 namespace UVSUzduotis
 {
@@ -26,7 +28,9 @@ namespace UVSUzduotis
 
         private readonly UVSDBContext _context;
         private ThreadController _threadController;
+
         public static ListView _listView;
+
 
         private int selectedThreads;
 
@@ -40,6 +44,8 @@ namespace UVSUzduotis
             _context.Database.EnsureCreated();//This makes sure that the databae is created.
 
             LoadListView();
+
+            ThreadListView.ItemsSource = _threadController.UVSModels;
 
         }
 
@@ -77,7 +83,8 @@ namespace UVSUzduotis
         private void ThreadButton_Stop(object sender, RoutedEventArgs e)
         {
             _threadController.ThreadSymbolGeneration(selectedThreads,false);
-            LoadListView();
         }
+
+
     }
 }

@@ -8,6 +8,9 @@ namespace UVSUzduotis.Controller
 {
     public class SymbolGeneratorController
     {
+        private static readonly Random random = new Random();
+
+        private const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
         public string GenerateSymbols(int minLenght, int maxLenght)
         {
@@ -15,10 +18,6 @@ namespace UVSUzduotis.Controller
             {
                 throw new ArgumentException("minLength must be less than or equal to maxLenght and non-negative");
             }
-
-            Random random = new Random();
-
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
             int lenght = random.Next(minLenght, maxLenght +1);
             
